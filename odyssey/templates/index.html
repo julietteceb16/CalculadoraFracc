@@ -1,0 +1,17 @@
+<html>
+    <head>
+        {% load static%} <!--codigo dtl -->
+        <link href="{% static 'estilos.css' %}"rel="stylesheet"/>
+
+    </head>
+
+    <body>
+        <h1>Bienvenidos a Odyssey</h1>
+        <form action= "proceso" method="POST">
+            {% csrf_token %}<!--mecanismos de seguridad-->
+            <input type="text" name="nombre"/>
+            <input type="submit"/>
+        </form> <!--cuadno se contruñe un formulario se le pide algo al ususario -->
+
+    </body>
+</html>
