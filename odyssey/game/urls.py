@@ -1,13 +1,18 @@
-from django.urls import path
+from django.urls import include,path
 from rest_framework import routers
 from . import views #el punto significa impotar todo de views
 
-#router = routers.DefaultRouter()
-#router.register(r'reto', views.RetoViewSet)
-#router.register(r'jugador', views.JugadoresViewSet)
+#rutas
+router = routers.DefaultRouter()
+router.register(r'reto', views.RetoViewSet)
+router.register(r'jugador', views.JugadoresViewSet)
+router.register(r'partida', views.PartidasViewSet)
+router.register(r'usuario', views.UsuariosViewSet)
 
 
 urlpatterns = [
+    path('api',include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('',views.index, name='index'), #el primero es para cachar expresiones regulares(cualquier texto), el segundo dice como se va a llamar la clase y el final ek nombre de la clase
     path('proceso',views.proceso,name='proceso'),#cundo el usuario ponga proceso tienes que irte a viewa y enontrar proceso
     path('registro',views.registro,name= 'registro'),

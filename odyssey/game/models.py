@@ -9,5 +9,14 @@ class Jugadores(models.Model):
     grupo = models.CharField(max_length=2)
     num_lista = models.IntegerField()
 
+class Usuarios(models.Model):
+    password = models.CharField(max_length=30)
+
+class Partidas(models.Model):
+    fecha = models.CharField(max_length=30)
+    id_ususario = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
+    minutos_jugados= models.CharField(max_length=30)
+    puntaje = models.CharField(max_length=30)
+
 
 

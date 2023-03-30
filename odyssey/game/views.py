@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets
-#from . serializers import RetoSerializer,JugadorSerializer
-#from .models import Reto,Jugadores
+from . serializers import RetoSerializer,JugadorSerializer,UsuariosSerializer,PartidasSerializer
+from .models import Reto,Jugadores,Usuarios,Partidas
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from json import loads,dumps
@@ -257,14 +257,28 @@ def procesologin(request):
         return HttpResponse('Abrir página principal')
     return HttpResponse('Abrir página de credenciales inválidas')
 
-#class RetoViewSet(viewsets.ModelViewSet):
-    #queryset = Reto.objects.all()
-    #serializer_class = RetoSerializer
+##Viewset hace todas las vistas para hacer los 4 comandos
+
+class RetoViewSet(viewsets.ModelViewSet):
+    queryset = Reto.objects.all() #all recupera todos los registro de la entidada Reto
+    serializer_class = RetoSerializer
     
-#### "REST #####
-#class JugadoresViewSet(viewsets.ModelViewSet): #va hacer las 4 vistas(insertar, enlistar, etc) de tipo jugador
-    #queryset = Jugadores.objects.all() #select * from Calculadora.Jugadores
-    #serializer_class = JugadorSerializer
+#### "METODO REST #####
+class JugadoresViewSet(viewsets.ModelViewSet): #va hacer las 4 vistas(insertar, enlistar, etc) de tipo jugador
+    queryset = Jugadores.objects.all() #select * from Calculadora.Jugadores
+    serializer_class = JugadorSerializer
+
+########
+class PartidasViewSet(viewsets.ModelViewSet):
+    queryset = Partidas.objects.all() #all recupera todos los registro de la entidada Reto
+    serializer_class = PartidasSerializer
+
+class UsuariosViewSet(viewsets.ModelViewSet):
+    queryset = Usuarios.objects.all() #all recupera todos los registro de la entidada Reto
+    serializer_class = UsuariosSerializer
+
+#########
+
 
 def grafica(request):
     #h_var : The title for horizontal axis
