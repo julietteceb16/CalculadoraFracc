@@ -398,30 +398,44 @@ def barras(request):
     elJSON = {'losDatos': data, 'titulo': titulo_formato, 'subtitulo': subtitulo_formato}
     return render(request,'barras.html',elJSON)
 
-
-def basedatos(request):
-    resultados = Reto.objects.all()
-    data = [['Nombre', 'Minutos jugados']]
-    for registro in resultados:
-        nombre = registro.nombre
-        minutos = registro.minutos_jugados
-        data.append([nombre, minutos])
-    data_json = dumps({'losDatos': data})
-    return HttpResponse(data_json, content_type='application/json')
-
-
-
+# el parametro de entrada que sean minutos jugados y filtrar la base y para ver quien tiene  el mayor numero de  minutos jugados
 @csrf_exempt
+def basedatos(request):
+    if(request.method == 'POST'):
+        body = request.body.decode('UTF-8')
+        eljson = loads(body)
+        minutos = eljson['minutos_jugados']
+        
+        resultados = Reto.objects.filter(minutos_jugados__gt=minutos)
+        data = [['Nombre', 'Minutos jugados']]
+        for registro in resultados:
+            nombre = registro.nombre
+            minutos = registro.minutos_jugados
+            data.append([nombre, minutos])
+        data_json = dumps({'losDatos': data})
+        return HttpResponse(data_json, content_type='application/json')
+
+    
+
+
 def gauge(request):
     url = "http://127.0.0.1:8000/basedatos"
-    response = requests.get(url)
-    data = loads(response.content)['losDatos']
-    titulo = 'Videojuego Odyssey'
-    titulo_formato = dumps(titulo)
-    subtitulo= 'Total de minutos por jugador'
-    subtitulo_formato = dumps(subtitulo)
-    elJSON = {'losDatos': data, 'titulo': titulo_formato, 'subtitulo': subtitulo_formato}
-    return render(request,'gauge.html',elJSON)
+    header = {
+    "Content-Type":"application/json"
+    }
+    payload = {   
+    "minutos_jugados":"130"
+    }
+    result = requests.post(url,  data= dumps(payload), headers=header)
+    if result.status_code == 200:
+        #sresponse = requests.get(url)
+        data = loads(result.content)['losDatos']
+        titulo = 'Videojuego Odyssey'
+        titulo_formato = dumps(titulo)
+        subtitulo= 'Total de minutos por jugador'
+        subtitulo_formato = dumps(subtitulo)
+        elJSON = {'losDatos': data, 'titulo': titulo_formato, 'subtitulo': subtitulo_formato}
+        return render(request,'gauge.html',elJSON)
 
 
 
