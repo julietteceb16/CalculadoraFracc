@@ -399,7 +399,7 @@ def barras(request):
     return render(request,'barras.html',elJSON)
 
 
-def base_de_datos(request):
+def basedatos(request):
     resultados = Reto.objects.all()
     data = [['Nombre', 'Minutos jugados']]
     for registro in resultados:
@@ -413,7 +413,7 @@ def base_de_datos(request):
 
 @csrf_exempt
 def gauge(request):
-    url = "http://127.0.0.1:8000/consultar_db"
+    url = "http://127.0.0.1:8000/basedatos"
     response = requests.get(url)
     data = loads(response.content)['losDatos']
     titulo = 'Videojuego Odyssey'

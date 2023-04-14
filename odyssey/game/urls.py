@@ -31,7 +31,7 @@ urlpatterns = [
     path('procesologin', views.procesologin, name='procesologin'),
     path('grafica',views.grafica,name='grafica'),
     path('barras',views.barras,name='barras'),
-    path('base_de_datos',views.base_de_datos,name='base_de_datos'),
+    path('basedatos',views.basedatos,name='basedatos'),
     path('gauge',views.gauge,name='gauge'),
 
     
