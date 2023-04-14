@@ -325,34 +325,103 @@ def grafica(request):
     # dictiory shown below so that they can be displayed on the home screen
     return render(request,"charts.html",{'values':modified_data,'h_title':h_var_JSON,'v_title':v_var_JSON})#pasae los datos 
 
-def barras(request):
-    '''
-    data = [
-          ['Jugador', 'Minutos Jugados'],
-          ['Ian', 1000],
-          ['Héctor', 1170],
-          ['Alan', 660],
-          ['Manuel', 1030]
-        ]
-    '''
-    data = []
-    data.append(['Jugador', 'Minutos Jugados'])#se agrega la primera fila
-    resultados = Reto.objects.all() #select * from reto;    #-->mandar a llamar un servicio(rest)
-    titulo = 'Videojuego Odyssey' 
-    titulo_formato = dumps(titulo) #formatear json --> IMPORTANTE
-    subtitulo= 'Total de minutos por jugador' 
-    subtitulo_formato = dumps(subtitulo)#formatear json --> IMPORTANTE
-    if len(resultados)>0:
-        for registro in resultados:#Itero los resuktados y saco nombre
-            nombre = registro.nombre
-            minutos = registro.minutos_jugados
-            data.append([nombre,minutos])#se agrega a la data
-        data_formato = dumps(data) #formatear data en string para JSON
-        elJSON = {'losDatos':data_formato,'titulo':titulo_formato,'subtitulo':subtitulo_formato}
-        return render(request,'barras.html',elJSON)#datos de los campos al html --> a barras
-    else:
-        return HttpResponse("<h1> No hay registros a mostrar</h1>")
+# def barras(request):
+#     '''
+#     data = [
+#           ['Jugador', 'Minutos Jugados'],
+#           ['Ian', 1000],
+#           ['Héctor', 1170],
+#           ['Alan', 660],
+#           ['Manuel', 1030]
+#         ]
+#     '''
+#     data = []
+#     data.append(['Jugador', 'Minutos Jugados'])#se agrega la primera fila
+#     resultados = Reto.objects.all() #select * from reto;    #-->mandar a llamar un servicio(rest)
+#     titulo = 'Videojuego Odyssey' 
+#     titulo_formato = dumps(titulo) #formatear json --> IMPORTANTE
+#     subtitulo= 'Total de minutos por jugador' 
+#     subtitulo_formato = dumps(subtitulo)#formatear json --> IMPORTANTE
+#     if len(resultados)>0:
+#         for registro in resultados:#Itero los resuktados y saco nombre
+#             nombre = registro.nombre
+#             minutos = registro.minutos_jugados
+#             data.append([nombre,minutos])#se agrega a la data
+#         data_formato = dumps(data) #formatear data en string para JSON
+#         elJSON = {'losDatos':data_formato,'titulo':titulo_formato,'subtitulo':subtitulo_formato}
+#         return render(request,'barras.html',elJSON)#datos de los campos al html --> a barras
+#     else:
+#         return HttpResponse("<h1> No hay registros a mostrar</h1>")
 
+
+
+#def gauge(request):
+    #'''
+    #data = [
+          #['Jugador', 'Minutos Jugados'],
+          #['Ian', 1000],
+          #['Héctor', 1170],
+          #['Alan', 660],
+          #['Manuel', 1030]
+        #]
+    #'''
+    #data = []
+    #data.append(['Jugador', 'Minutos Jugados'])#se agrega la primera fila
+    #resultados = Reto.objects.all() #select * from reto;    #-->mandar a llamar un servicio(rest)
+    #titulo = 'Videojuego Odyssey' 
+    #titulo_formato = dumps(titulo) #formatear json --> IMPORTANTE
+    #subtitulo= 'Total de minutos por jugador' 
+    #subtitulo_formato = dumps(subtitulo)#formatear json --> IMPORTANTE
+    #if len(resultados)>0:
+        #for registro in resultados:#Itero los resuktados y saco nombre
+            #nombre = registro.nombre
+            #minutos = registro.minutos_jugados
+            #data.append([nombre,minutos])#se agrega a la data
+        #data_formato = dumps(data) #formatear data en string para JSON
+        #elJSON = {'losDatos':data_formato,'titulo':titulo_formato,'subtitulo':subtitulo_formato}
+        #return render(request,'gauge.html',elJSON)#datos de los campos al html --> a barras
+    #else:
+        #return HttpResponse("<h1> No hay registros a mostrar</h1>")
+
+
+
+
+@csrf_exempt
+def barras(request):
+    url = "http://127.0.0.1:8000/consultar_db"
+    response = requests.get(url)
+    data = loads(response.content)['losDatos']
+    titulo = 'Videojuego Odyssey'
+    titulo_formato = dumps(titulo)
+    subtitulo= 'Total de minutos por jugador'
+    subtitulo_formato = dumps(subtitulo)
+    elJSON = {'losDatos': data, 'titulo': titulo_formato, 'subtitulo': subtitulo_formato}
+    return render(request,'barras.html',elJSON)
+
+
+def base_de_datos(request):
+    resultados = Reto.objects.all()
+    data = [['Nombre', 'Minutos jugados']]
+    for registro in resultados:
+        nombre = registro.nombre
+        minutos = registro.minutos_jugados
+        data.append([nombre, minutos])
+    data_json = dumps({'losDatos': data})
+    return HttpResponse(data_json, content_type='application/json')
+
+
+
+@csrf_exempt
+def gauge(request):
+    url = "http://127.0.0.1:8000/consultar_db"
+    response = requests.get(url)
+    data = loads(response.content)['losDatos']
+    titulo = 'Videojuego Odyssey'
+    titulo_formato = dumps(titulo)
+    subtitulo= 'Total de minutos por jugador'
+    subtitulo_formato = dumps(subtitulo)
+    elJSON = {'losDatos': data, 'titulo': titulo_formato, 'subtitulo': subtitulo_formato}
+    return render(request,'gauge.html',elJSON)
 
 
 
